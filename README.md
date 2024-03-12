@@ -22,21 +22,10 @@ Before you begin, ensure you have the following installed on your system:
 - FastAPI
 - Uvicorn, an ASGI server for FastAPI
 
-### Step-by-Step Installation Guide
-
-1. **Clone the Repository**
-   
-   Start by cloning the repository to your local machine. Use the following command:
-   ```bash
-   git clone https://github.com/your-username/your-repository.git
-   cd your-repository
-
-## Set Up a Virtual Environment (Optional but recommended)
-
-It's a good practice to create a virtual environment for your Python projects. This keeps your project dependencies isolated. If you have `virtualenv` installed, create a new environment with:
+## Virtual Environment Setup
 
 ```bash
-virtualenv venv
+python3 -m venv venv
 source venv/bin/activate
 ```
 
