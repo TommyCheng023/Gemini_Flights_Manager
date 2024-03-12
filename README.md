@@ -12,7 +12,7 @@ Key features of Gemini Flight Manager include:
 
 Designed with extensibility and scalability in mind, Gemini Flight Manager is well-suited for both educational purposes and as a foundation for more complex flight management applications.
 
-**For the purposes of Gemini Function Calling, you will only need `search_flights` and `book_flight` functions.
+**For the purposes of Gemini Function Calling, you will only need `search_flights` and `book_flight` functions.**
 
 ## Installation
 
@@ -23,27 +23,26 @@ Before you begin, ensure you have the following installed on your system:
 - Uvicorn, an ASGI server for FastAPI
 
 ## Virtual Environment Setup
-
+### build and activate an environment
 ```bash
-python3 -m venv venv
-source venv/bin/activate
+python3 -m venv env
+source env/bin/activate
 ```
-
-## Install Dependencies
-Inside the virtual environment, install all necessary dependencies by running:
+### install dependencies
+The repository provides `requirements.txt`, install by the following command.
 ```bash
 pip install -r requirements.txt
 ```
 
-## Starting the FastAPI Server
-
+## Launch the FastAPI Server
+### Run Command
 After the installation, you can start the FastAPI server using Uvicorn. Navigate to the project directory and run:
 
 ```bash
 uvicorn main:app
 ```
 
-## Accessing the API
+### Accessory
 With the server running, you can access the API at `http://127.0.0.1:8000.`
 
 For interactive API documentation, visit `http://127.0.0.1:8000/docs`, where you can test the API endpoints directly from your browser.
