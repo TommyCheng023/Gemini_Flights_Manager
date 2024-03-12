@@ -52,20 +52,24 @@ model = GenerativeModel(
 # helper function to unpack responses
 def handle_response(response):
     
-    # Check for function call with intermediate step, always return response
+    # check if there's a function call
     if response.candidates[0].content.parts[0].function_call.args:
-        # Function call exists, unpack and load into a function
+        # function call exists, unpack and load into a function
         response_args = response.candidates[0].content.parts[0].function_call.args
         
+        # package into a dictionary
         function_params = {}
         for key in response_args:
             value = response_args[key]
             function_params[key] = value
         
+        # unpack the dictionary and pass in the tool
         results = search_flights(**function_params)
         
+        # condition: a success in actual response in the FastAPI server
         if results:
             intermediate_response = chat.send_message(
+                # send that back to Google Gemini
                 Part.from_function_response(
                     name="get_search_flights",
                     response = results
@@ -76,17 +80,21 @@ def handle_response(response):
         else:
             return "Search Failed"
     else:
-        # Return just text
+        # return just text
         return response.candidates[0].content.parts[0].text
 
 # helper function to display and send streamlit messages
 def llm_function(chat: ChatSession, query):
+    # chat.send_message(): invoke Google Gemini by sending the parameter
     response = chat.send_message(query)
+    # call handle_respons() to GET an output
     output = handle_response(response)
     
+    # Streamlit-favored User Interface
     with st.chat_message("model"):
         st.markdown(output)
     
+    # store into the session memory in a request-response pattern
     st.session_state.messages.append(
         {
             "role": "user",
@@ -100,15 +108,14 @@ def llm_function(chat: ChatSession, query):
         }
     )
 
+# make the page
 st.title("Gemini Flights")
 
 chat = model.start_chat()
 
-# Initialize chat history
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Display and load to chat history
 for index, message in enumerate(st.session_state.messages):
     content = Content(
             role = message["role"],
@@ -121,15 +128,13 @@ for index, message in enumerate(st.session_state.messages):
 
     chat.history.append(content)
 
-# For Initial message startup
 if len(st.session_state.messages) == 0:
     # Invoke initial message
-    initial_prompt = "Introduce yourself as a flights management assistant, ReX, powered by Google Gemini and designed to search/book flights. You use emojis to be interactive. For reference, the year for dates is 2024"
+    initial_prompt = "Introduce yourself as a flights management assistant, Sir Gemini, powered by Google Gemini and designed to search/book flights. You use emojis to be interactive. For reference, the year for dates is 2024"
 
     llm_function(chat, initial_prompt)
 
-# For capture user input
-query = st.chat_input("Gemini Flights")
+query = st.chat_input("Check your flights...")
 
 if query:
     with st.chat_message("user"):
