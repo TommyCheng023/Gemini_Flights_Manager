@@ -21,6 +21,8 @@ Before you begin, ensure you have the following installed on your system:
 - Python 3.6 or higher
 - FastAPI
 - Uvicorn, an ASGI server for FastAPI
+- Google Cloud Platform
+  - view specific instructions in my other repository [Gemini Explorer](https://github.com/TommyCheng023/Gemini_Explorer)
 
 ## Virtual Environment Setup
 ### build and activate an environment
