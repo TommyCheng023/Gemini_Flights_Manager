@@ -6,7 +6,7 @@ from typing import Optional
 from fastapi import Depends, HTTPException
 from sqlalchemy import and_, func
 from sqlalchemy.orm import Session
-from models import Flight, FlightModel, FlightSearchCriteria, get_db
+from models import Flight, FlightModel, FlightSearchCriteria, FlightBookCriteria, get_db
 import logging
 
 # Create a logger for this module
@@ -282,6 +282,38 @@ def search_flights(**params):
 
     # Making the GET request
     response = requests.get(url, headers={'accept': 'application/json'})
+
+    # Returning the JSON response
+    return response.json()
+
+def book_flight(**params):
+    """
+    Sends a POST request to a FastAPI endpoint to book for flights based on various criteria.
+
+    Parameters:
+    - criteria (FlightBookCriteria): An object containing the search criteria.
+
+    Returns:
+    The response from the FastAPI endpoint as a JSON object.
+    """
+    # Create an instance of FlightBookCriteria from the passed arguments [see criteria in models.py]
+    criteria = FlightBookCriteria(**params)
+
+    # Constructing the URL with query parameters
+    url = f"http://127.0.0.1:8000/book-flights/?flight_id={criteria.flight_id}&flight_number={criteria.flight_number}&seat_type={criteria.seat_type}"
+
+    # Adding optinal parameters to the URL
+    if criteria.airline is not None:
+        url += f"&airline={criteria.airline}"
+    if criteria.min_cost is not None:
+        url += f"&min_cost={criteria.min_cost}"
+    if criteria.max_cost is not None:
+        url += f"&max_cost={criteria.max_cost}"
+
+    url += "&page=1&page_size=10"
+
+    # Making the POST request
+    response = requests.post(url, json=params, headers={'accept': 'application/json'})
 
     # Returning the JSON response
     return response.json()
