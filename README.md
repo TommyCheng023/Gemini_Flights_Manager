@@ -154,7 +154,7 @@ streamlit run sample.py
 - Appreciate Radical AI for providing such a precious experience on AI engineering and backend development.
 - I also want to show my gratitude to Talha Sabri and Mikhail Ocampo for detailed instructions.
 ### Project Report
-<ins>Coming soon!</ins>
+[Loom Video](https://www.loom.com/share/bfec733a869948ad83cd209b658dac3b?sid=1374e828-9598-4ef1-be2d-8695a5e91f37)
 ### About Contributors
 - Mikhail Ocampo
   - GitHub Profile: [Mikhail.io](https://github.com/Vy-X-S)
