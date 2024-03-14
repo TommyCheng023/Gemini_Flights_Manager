@@ -190,7 +190,7 @@ def handle_flight_search(criteria, db: Session, page: Optional[int] = 1, page_si
         "total_pages": total_pages
     }
 
-def handle_flight_book(flight_id: int, seat_type: str, num_seats: int = 1, db: Session = Depends(get_db)):
+def handle_flight_book(criteria, db: Session = Depends(get_db)):
     """
     Books a specified number of seats on a flight.
 
@@ -200,6 +200,9 @@ def handle_flight_book(flight_id: int, seat_type: str, num_seats: int = 1, db: S
     changes to the database.
 
     Parameters:
+    - criteria: An object containing the search criteria, including origin, destination, 
+      departure date, optional arrival date, flight number, airline, departure time, arrival time, 
+      seat type, minimum and maximum cost.
     - flight_id (int): The unique identifier of the flight to book.
     - seat_type (str): The class of the seat to book (economy, business, or first_class).
     - num_seats (int, optional): The number of seats to book (default is 1).
@@ -214,7 +217,7 @@ def handle_flight_book(flight_id: int, seat_type: str, num_seats: int = 1, db: S
     it returns a 'Flight not found.' message.
     """
     # Retrieve the flight from the database
-    flight = db.query(Flight).filter(Flight.flight_id == flight_id).first()
+    flight = db.query(Flight).filter(Flight.flight_id == criteria.flight_id).first()
 
     if not flight:
         return "Flight not found."
@@ -223,23 +226,23 @@ def handle_flight_book(flight_id: int, seat_type: str, num_seats: int = 1, db: S
     total_cost = 0
 
     # Check seat availability based on seat type and number of requested seats
-    if seat_type == "economy" and flight.open_seats_economy >= num_seats:
-        flight.open_seats_economy -= num_seats
-        total_cost = flight.economy_seat_cost * num_seats
-    elif seat_type == "business" and flight.open_seats_business >= num_seats:
-        flight.open_seats_business -= num_seats
-        total_cost = flight.business_seat_cost * num_seats
-    elif seat_type == "first_class" and flight.open_seats_first_class >= num_seats:
-        flight.open_seats_first_class -= num_seats
-        total_cost = flight.first_class_cost * num_seats
+    if criteria.seat_type == "economy" and flight.open_seats_economy >= criteria.num_seats:
+        flight.open_seats_economy -= criteria.num_seats
+        total_cost = flight.economy_seat_cost * criteria.num_seats
+    elif criteria.seat_type == "business" and flight.open_seats_business >= criteria.num_seats:
+        flight.open_seats_business -= criteria.num_seats
+        total_cost = flight.business_seat_cost * criteria.num_seats
+    elif criteria.seat_type == "first_class" and flight.open_seats_first_class >= criteria.num_seats:
+        flight.open_seats_first_class -= criteria.num_seats
+        total_cost = flight.first_class_cost * criteria.num_seats
     else:
         # If not enough seats are available, return a failure message
-        return f"Not enough {seat_type} seats available."
+        return f"Not enough {criteria.seat_type} seats available."
 
     # Commit the booking to the database
     db.commit()
     
-    success_message = f"Successfully booked {num_seats} {seat_type} seat(s) on {flight.airline} flight on {flight.departure_date} from {flight.origin} to {flight.destination}. Total cost: ${total_cost}."
+    success_message = f"Successfully booked {criteria.num_seats} {criteria.seat_type} seat(s) on {flight.airline} flight on {flight.departure_date} from {flight.origin} to {flight.destination}. Total cost: ${total_cost}."
 
     # Return a success message
     return {"message": success_message, "flight_info": flight}
@@ -300,15 +303,16 @@ def book_flight(**params):
     criteria = FlightBookCriteria(**params)
 
     # Constructing the URL with query parameters
-    url = f"http://127.0.0.1:8000/book-flights/?flight_id={criteria.flight_id}&flight_number={criteria.flight_number}&seat_type={criteria.seat_type}"
+    url = f"http://127.0.0.1:8000/book-flights/?flight_id={criteria.flight_id}&seat_type={criteria.seat_type}"
 
     # Adding optinal parameters to the URL
     if criteria.airline is not None:
         url += f"&airline={criteria.airline}"
-    if criteria.min_cost is not None:
-        url += f"&min_cost={criteria.min_cost}"
-    if criteria.max_cost is not None:
-        url += f"&max_cost={criteria.max_cost}"
+    if criteria.flight_number is not None:
+        url += f"&airline={criteria.flight_number}"
+    if criteria.num_seats != 1:
+        url += f"&airline={criteria.num_seats}"
+    
 
     url += "&page=1&page_size=10"
 
