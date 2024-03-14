@@ -3,9 +3,15 @@ import streamlit as st
 from vertexai.preview import generative_models
 from vertexai.preview.generative_models import GenerativeModel, Tool, Part, Content, ChatSession
 from services.flight_manager import search_flights
+import os
+os.environ['GRPC_DNS_RESOLVER'] = 'native'
 
-project = "sample-gemini"
-vertexai.init(project = project)
+project = "gemini-flights-417016"
+try:
+    vertexai.init( project = project )
+except Exception as e:
+    st.error(f"Failed to initialize Vertex AI: {e}")
+    st.stop()
 
 # Define Tool - Search Flights
 get_search_flights = generative_models.FunctionDeclaration(
@@ -66,11 +72,15 @@ search_tool = generative_models.Tool(
 
 config = generative_models.GenerationConfig(temperature=0.4)
 # Load model with config
-model = GenerativeModel(
-    "gemini-pro",
-    tools = [search_tool],
-    generation_config = config
-)
+try: 
+    model = GenerativeModel(
+        "gemini-pro", 
+        tools = [search_tool],
+        generation_config = config
+    )
+except Exception as e:
+    st.error(f"Failed to load model: {e}")
+    st.stop()
 
 # helper function to unpack responses
 def handle_response(response):
@@ -108,24 +118,26 @@ def handle_response(response):
 
 # helper function to display and send streamlit messages
 def llm_function(chat: ChatSession, query):
-    # chat.send_message(): invoke Google Gemini by sending the parameter
-    response = chat.send_message(query)
-    # call handle_respons() to GET an output
-    output = handle_response(response)
+    try:
+        response = chat.send_message(query) # chat.send_message(): invoke Google Gemini by sending the parameter
+        output = handle_response(response) # call handle_respons() to GET an output
+    except Exception as e:
+        st.error(f"Failed to send message or receive response: {e}")
+        return
     
-    # Streamlit-favored User Interface
     with st.chat_message("model"):
+        # tell streamlit to create an 'output' text and then applying that to the ChatSession
         st.markdown(output)
-    
-    # store into the session memory in a request-response pattern
     st.session_state.messages.append(
         {
+            # append into the session memory that the user has made a query
             "role": "user",
             "content": query
         }
     )
     st.session_state.messages.append(
         {
+            # append the model output
             "role": "model",
             "content": output
         }
@@ -133,8 +145,11 @@ def llm_function(chat: ChatSession, query):
 
 # make the page
 st.title("Gemini Flights")
-
-chat = model.start_chat()
+try:
+    chat = model.start_chat()
+except Exception as e:
+    st.error(f"Failed to start chat session: {e}")
+    st.stop()
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
