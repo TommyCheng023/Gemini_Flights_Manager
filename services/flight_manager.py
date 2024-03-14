@@ -203,9 +203,6 @@ def handle_flight_book(criteria, db: Session = Depends(get_db)):
     - criteria: An object containing the search criteria, including origin, destination, 
       departure date, optional arrival date, flight number, airline, departure time, arrival time, 
       seat type, minimum and maximum cost.
-    - flight_id (int): The unique identifier of the flight to book.
-    - seat_type (str): The class of the seat to book (economy, business, or first_class).
-    - num_seats (int, optional): The number of seats to book (default is 1).
     - db (Session, default Depends(get_db)): SQLAlchemy database session for executing queries.
 
     Returns:
