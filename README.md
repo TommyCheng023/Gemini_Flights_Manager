@@ -150,11 +150,15 @@ streamlit run sample.py
 ```
 
 ## 4. Appendix
+### Certificate
+<img width="1004" alt="Screen Shot 2024-03-14 at 4 26 02 PM" src="https://github.com/TommyCheng023/Gemini_Flights_Manager/assets/115842289/f28c6236-be4e-4d1b-9d85-8916b501f6d1">
+
+### Project Report
+[Loom Video](https://www.loom.com/share/bfec733a869948ad83cd209b658dac3b?sid=1374e828-9598-4ef1-be2d-8695a5e91f37)
+
 ### Appreciation
 - Appreciate Radical AI for providing such a precious experience on AI engineering and backend development.
 - I also want to show my gratitude to Talha Sabri and Mikhail Ocampo for detailed instructions.
-### Project Report
-[Loom Video](https://www.loom.com/share/bfec733a869948ad83cd209b658dac3b?sid=1374e828-9598-4ef1-be2d-8695a5e91f37)
 ### About Contributors
 - Mikhail Ocampo
   - GitHub Profile: [Mikhail.io](https://github.com/Vy-X-S)
