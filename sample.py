@@ -39,17 +39,13 @@ get_search_flights = generative_models.FunctionDeclaration(
 # Define Tool - Book Flights
 get_book_flights = generative_models.FunctionDeclaration(
     name="get_book_flights",
-    description="Tool for booking a flight with flight_id, flight_number and seat_type",
+    description="Tool for booking a flight with flight_id, seat_type and number of seats, which is optional.",
     parameters={
         "type": "object",
         "properties": {
             "flight_id": {
                 "type": "int",
                 "description": "A unique integer representing the flight such as 23, 100, 5, etc., entered by the user."
-            },
-            "flight_name": {
-                "type": "str",
-                "description": "The user enters a pattern representing the plane in the format of letters followed by numbers, such as CX812, MU2937, etc."
             },
             "seat_type": {
                 "type": "str",
@@ -58,7 +54,6 @@ get_book_flights = generative_models.FunctionDeclaration(
         },
         "required": [
             "flight_id",
-            "flight_name",
             "seat_type"
         ]
     },
