@@ -150,7 +150,7 @@ streamlit run sample.py
 ```
 
 ## 4. Appendix
-### Certificate
+### Project Certificate
 <img width="1004" alt="Screen Shot 2024-03-14 at 4 26 02 PM" src="https://github.com/TommyCheng023/Gemini_Flights_Manager/assets/115842289/f28c6236-be4e-4d1b-9d85-8916b501f6d1">
 
 ### Project Report
